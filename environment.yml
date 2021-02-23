@@ -7,5 +7,5 @@ dependencies:
   - pandas
   - matplotlib-base
   - pip
-  pip:
-    git+https://github.com/girpas-ulg/trendfit
+  - pip:
+    - git+https://github.com/girpas-ulg/trendfit
