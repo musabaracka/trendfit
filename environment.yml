@@ -1,0 +1,11 @@
+channels:
+  - conda-forge
+dependencies:
+  - numpy
+  - scipy
+  - dask
+  - pandas
+  - matplotlib-base
+  - pip
+  pip:
+    git+https://github.com/girpas-ulg/trendfit
