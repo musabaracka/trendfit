@@ -37,7 +37,8 @@ class LinearNoTrendFourier(BaseEstimator):
         Parameters
         ----------
         f_order : int, optional
-            Finite order of the truncated Fourier series (default=3).
+            Finite order of the truncated Fourier series (default=3). Set
+            it to zero there's no periodic variability in the time series.
 
         """
         self.f_order = f_order
@@ -55,18 +56,22 @@ class LinearNoTrendFourier(BaseEstimator):
 
     def _regressor_terms(self, t):
         reg_terms = []
+        reg_idx = {}
 
         # fourier terms
-        for degree in range(1, self.f_order + 1):
-            reg_terms += self._fourier_terms(t, degree)
+        if self.f_order:
+            for degree in range(1, self.f_order + 1):
+                reg_terms += self._fourier_terms(t, degree)
+
+            reg_idx['fourier_terms'] = slice(0, self.f_order * 2)
 
         # intercept
         reg_terms.append(np.ones(t.size))
 
-        reg_idx = {
-            'fourier_terms': slice(0, self.f_order * 2),
-            'intercept': self.f_order * 2
-        }
+        if self.f_order:
+            reg_idx['intercept'] = self.f_order * 2
+        else:
+            reg_idx['intercept'] = 0
 
         return reg_idx, reg_terms
 
@@ -133,7 +138,8 @@ class LinearTrendFourier(LinearNoTrendFourier):
         Parameters
         ----------
         f_order : int, optional
-            Finite order of the truncated Fourier series (default=3).
+            Finite order of the truncated Fourier series (default=3). Set
+            it to zero there's no periodic variability in the time series.
 
         """
         super().__init__(f_order)
@@ -215,7 +221,8 @@ class LinearBrokenTrendFourier(LinearTrendFourier):
         Parameters
         ----------
         f_order : int, optional
-            Finite order of the truncated Fourier series (default=3).
+            Finite order of the truncated Fourier series (default=3). Set
+            it to zero there's no periodic variability in the time series.
         t_break : float, optional
             Location of the trend discontinuity. If None (default), the
             location will be estimated when fitting the model to data.
