@@ -272,7 +272,7 @@ class LinearBrokenTrendFourier(LinearTrendFourier):
             if self._opt_bounds is None:
                 bounds = [(t[1], t[-1])]
             else:
-                bounds = self._opt_bounds
+                bounds = [self._opt_bounds]
 
             kwargs = {'maxiter': 500}
             kwargs.update(self._opt_kwargs)
