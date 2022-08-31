@@ -173,9 +173,10 @@ def residual_resampling(model, n_samples=1000, **kwargs):
 
 def _cholesky_decomposition(t, gamma):
     mat = np.triu(gamma**(t[None, :] - t[:, None]))
-    np.fill_diagonal(mat, 0.5)
+    mat2 = .9999999999*mat + .9999999999*mat.transpose()
+    np.fill_diagonal(mat2, 1.0)
 
-    return np.linalg.cholesky(mat + mat.transpose())
+    return np.linalg.cholesky(mat2)
 
 
 class BlockARWildRunner(BootstrapRunner):
@@ -195,11 +196,11 @@ class BlockARWildRunner(BootstrapRunner):
             # TODO: clarify this
             # this is not consistent with what is described in the paper
             # (in the paper, gamma, theta and l -> evenly spaced time-series)
-            #l = 1.75 * t.size**(1/3)
-            #gamma = 0.1**(1 / l)
-            th = 0.01**(1 / (1.75 * t.size**(1/3)))
-            l = 1 / 365.25
-            gamma = th**(1. / l)
+            l = 1.75 * t.size**(1/3)
+            gamma = 0.1**(1 / l)
+            #th = 0.01**(1 / (1.75 * t.size**(1/3)))
+            #l = 1 / 365.25
+            #gamma = th**(1. / l)
         else:
             gamma = self.ar_coef
 
