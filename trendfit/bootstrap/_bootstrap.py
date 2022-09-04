@@ -173,9 +173,8 @@ def residual_resampling(model, n_samples=1000, **kwargs):
 
 def _cholesky_decomposition(t, gamma):
     mat = np.triu(gamma**(t[None, :] - t[:, None]))
-    np.fill_diagonal(mat, 1.0)
-    mat2 = mat.transpose()@mat
-    #np.fill_diagonal(mat2, 1.0)
+    mat2 = mat + mat.transpose()
+    np.fill_diagonal(mat2, 1.0)
 
     return np.linalg.cholesky(mat2)
 
